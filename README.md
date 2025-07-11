@@ -10,6 +10,7 @@ this is my first project in python, yes it is exactly what´s in the name.
 
 
 # plans
-- add a .json file for permanent saving (it will be saved permanently with the changes unless the user erases it)
+- ~add a .json file for permanent saving (it will be saved permanently with the changes unless the user erases it)~ (was added, but instead of a json file it was a txt file)
+- add numbers automatically to things on the list(deltarune tomorrow will become 1. deltarune tomorrow or 2. deltarune tomorrow based on the last number in the file, detection will be added to prevent errors while removing) and the numbers will be used for removing
 - a gui made in html, css and js (a frontend for you dev people)
 - continous integration (yes, i know CI for a simple to do list is stupid, but im gonna integrate it anyways)
