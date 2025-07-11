@@ -1,6 +1,9 @@
 # simple-to-do-list
 this is my first project in python, yes it is exactly what´s in the name.
-![GitHub License](https://img.shields.io/github/license/CharaUTnDT/simple-to-do-list)
+
+![GitHub License](https://img.shields.io/github/license/CharaUTnDT/simple-to-do-list?style=flat)
+
+
 
 # plans
 - add a .json file for permanent saving (it will be saved permanently with the changes unless the user erases it)
