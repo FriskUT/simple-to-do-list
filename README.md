@@ -1,7 +1,9 @@
 # simple-to-do-list
 this is my first project in python, yes it is exactly what´s in the name.
 
-![GitHub License](https://img.shields.io/github/license/CharaDreemurr6/simple-to-do-list) ![GitHub Release](https://img.shields.io/github/v/release/CharaDreemurr6/simple-to-do-list?link=https%3A%2F%2Fgithub.com%2FCharaDreemurr6%2Fsimple-to-do-list%2Freleases%2Flatest)
+
+![GitHub License](https://img.shields.io/github/license/CharaDreemurr6/simple-to-do-list?link=https%3A%2F%2Fgithub.com%2FCharaDreemurr6%2Fsimple-to-do-list%2Fblob%2Fmain%2FLICENSE)
+![GitHub Release](https://img.shields.io/github/v/release/CharaDreemurr6/simple-to-do-list?link=https%3A%2F%2Fgithub.com%2FCharaDreemurr6%2Fsimple-to-do-list%2Freleases%2Flatest)
 
 
 
