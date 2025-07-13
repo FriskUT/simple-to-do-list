@@ -16,6 +16,7 @@ options = '''
 [3] See the current list
 [4] Exit
 '''
+horizontal_options = '''[1] Add something to the list [2] Remove something from the list [3] See the current list [4] Exit'''
 # This prints the beginning text with ASCII art, a question and options for the user.
 def beggining_function():
     print(ascii_art)
@@ -43,7 +44,7 @@ def remove_from_list():
                 file.write(line)
 
 def print_options():
-    print(options) # This function prints the options for the user, in case they just completed another function.
+    print(horizontal_options) # This function prints the options for the user, in case they just completed another function.
             
 # This function reads the contents of the list, makes a variable with the contents and prints it.    
 def see_list():
