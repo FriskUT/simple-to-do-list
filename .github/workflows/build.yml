@@ -30,11 +30,11 @@ jobs:
           cat << 'EOF' > get_version.py
           import requests, os, re
           repo = os.environ["GITHUB_REPOSITORY"]
-          token = os.environ["GITHUB_TOKEN"]
+          token = os.environ.get("GITHUB_TOKEN")
           r = requests.get(f"https://api.github.com/repos/{repo}/releases/latest",
                            headers={"Authorization": f"token {token}"})
           if r.status_code == 200:
-              tag = r.json()["tag_name"]
+              tag = r.json().get("tag_name", "v0.0")
           else:
               tag = "v0.0"
           m = re.match(r"v(\d+)\.(\d+)", tag)
@@ -42,17 +42,18 @@ jobs:
               new_tag = "v0.1"
           else:
               major, minor = map(int, m.groups())
-              if minor >= 9:   # último minor → sobe major
+              if minor >= 9:
                   new_tag = f"v{major+1}.0"
               else:
                   new_tag = f"v{major}.{minor+1}"
           print(f"::set-output name=new_tag::{new_tag}")
           EOF
           python get_version.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
         
       
-      
-
       - name: Build executable
         run: pyinstaller --onefile main.py
 
