@@ -1,0 +1,83 @@
+name: Build and Auto Release
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+          pip install pylint pyinstaller requests
+
+      - name: Get new tag
+        id: version
+        run: |
+          python - << 'EOF'
+          import requests, os, re
+          repo = os.environ["GITHUB_REPOSITORY"]
+          token = os.environ["GITHUB_TOKEN"]
+          r = requests.get(f"https://api.github.com/repos/{repo}/releases/latest",
+                           headers={"Authorization": f"token {token}"})
+          if r.status_code == 200:
+              tag = r.json()["tag_name"]
+          else:
+              tag = "v0.0"
+          m = re.match(r"v(\d+)\.(\d+)", tag)
+          if not m:
+              new_tag = "v0.1"
+          else:
+              major, minor = map(int, m.groups())
+              if minor >= 9:   # último minor → sobe major
+                  new_tag = f"v{major+1}.0"
+              else:
+                  new_tag = f"v{major}.{minor+1}"
+          print(f"::set-output name=new_tag::{new_tag}")
+          EOF
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Run pylint
+        run: |
+          pylint main.py > pylint_report.txt || true
+          echo "pylint_output<<EOF" >> $GITHUB_ENV
+          type pylint_report.txt >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
+
+      - name: Build executable
+        run: pyinstaller --onefile main.py
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.new_tag }}
+          name: Release ${{ steps.version.outputs.new_tag }}
+          body: |
+            ## Relatório Pylint
+            ```
+            ${{ env.pylint_output }}
+            ```
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload files to Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            dist/main.exe
+            main.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
