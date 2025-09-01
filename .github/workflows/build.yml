@@ -22,10 +22,12 @@ jobs:
         run: |
           pip install pylint pyinstaller requests
 
+
       - name: Get new tag
         id: version
+        shell: bash
         run: |
-          python - << 'EOF'
+          cat << 'EOF' > get_version.py
           import requests, os, re
           repo = os.environ["GITHUB_REPOSITORY"]
           token = os.environ["GITHUB_TOKEN"]
@@ -46,15 +48,10 @@ jobs:
                   new_tag = f"v{major}.{minor+1}"
           print(f"::set-output name=new_tag::{new_tag}")
           EOF
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Run pylint
-        run: |
-          pylint main.py > pylint_report.txt || true
-          echo "pylint_output<<EOF" >> $GITHUB_ENV
-          type pylint_report.txt >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
+          python get_version.py
+        
+      
+      
 
       - name: Build executable
         run: pyinstaller --onefile main.py
@@ -65,7 +62,7 @@ jobs:
           tag_name: ${{ steps.version.outputs.new_tag }}
           name: Release ${{ steps.version.outputs.new_tag }}
           body: |
-            ## Relatório Pylint
+            ## Pylint
             ```
             ${{ env.pylint_output }}
             ```
